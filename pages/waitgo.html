@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WaitGo - Sistema de Liberação</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --danger: #2bc21d;
+            --success: #22c55e;
+            --warning: #e42626;
+            --bg: #c6ddf3;
+            --card-bg: #f3f3f3;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: var(--primary); font-size: 3rem; margin: 0; letter-spacing: -2px; }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .instructor-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .instructor-name { font-weight: bold; margin-bottom: 15px; display: block; font-size: 1.1rem; }
+
+        .btn-liberar {
+            background-color: var(--primary);
+            color: white; border: none; padding: 10px 20px;
+            border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold;
+        }
+
+        .btn-liberar:disabled { background-color: #cbd5e1; cursor: not-allowed; }
+
+        .timer-active { background-color: var(--danger) !important; }
+        .cooldown-active { background-color: var(--warning) !important; }
+
+        .countdown { font-size: 1.1rem; font-weight: bold; margin-top: 10px; min-height: 24px; }
+        .timer-liberacao { color: var(--danger); }
+        .timer-espera { color: var(--primary); font-size: 0.85rem; }
+
+        .admin-panel {
+            margin-top: 40px; padding: 20px; background: #e2e8f0;
+            border-radius: 12px; display: flex; gap: 10px;
+        }
+
+        input { padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+        .btn-add { background-color: var(--success); color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; }
+        .slots-info { margin-bottom: 10px; font-weight: bold; color: #475569; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>WaitGo</h1>
+        <p>Controle de Liberação de Turmas</p>
+        <div class="slots-info" id="slots-status">Vagas disponíveis: 2</div>
+    </div>
+
+    <div class="container" id="instructor-container"></div>
+
+    <div class="admin-panel">
+        <input type="text" id="new-name" placeholder="Nome do novo instrutor">
+        <button class="btn-add" onclick="addNewInstructor()">Adicionar Instrutor</button>
+    </div>
+            <h3>Desenvolvido por Gabrielly, Rayssa e Heber</h3>
+    <script>
+        let activeSlots = 0;
+        const MAX_SLOTS = 2;
+        const COOLDOWN_TIME = 5 * 60; 
+        
+        // Lista inicial
+        const initialInstructors = ["Petronio", "Sandra", "Myzaell", "Wanderson", "Almir", "Ana Leticia", "Romulo"];
+
+        // Função para criar o elemento HTML do instrutor
+        function createInstructorCard(name) {
+            const container = document.getElementById('instructor-container');
+            const cardId = Date.now() + Math.random(); // ID único para não resetar
+
+            const card = document.createElement('div');
+            card.className = 'instructor-card';
+            card.dataset.inCooldown = "false";
+            
+            card.innerHTML = `
+                <span class="instructor-name">${name}</span>
+                <button class="btn-liberar">LIBERAR</button>
+                <div class="countdown"></div>
+            `;
+
+            const btn = card.querySelector('.btn-liberar');
+            const timerDisplay = card.querySelector('.countdown');
+
+            btn.onclick = () => startRelease(card, btn, timerDisplay);
+
+            container.appendChild(card);
+            updateGlobalUI();
+        }
+
+        function updateGlobalUI() {
+            const allButtons = document.querySelectorAll('.btn-liberar');
+            document.getElementById('slots-status').innerText = `Vagas disponíveis: ${MAX_SLOTS - activeSlots}`;
+
+            allButtons.forEach(btn => {
+                const card = btn.parentElement;
+                const inCooldown = card.dataset.inCooldown === "true";
+                const isLiberando = btn.classList.contains('timer-active');
+
+                if (inCooldown || (activeSlots >= MAX_SLOTS && !isLiberando)) {
+                    btn.disabled = true;
+                } else {
+                    btn.disabled = false;
+                }
+            });
+        }
+
+        function startRelease(card, btn, timerDisplay) {
+            activeSlots++;
+            btn.classList.add('timer-active');
+            btn.innerText = "LIBERANDO...";
+            btn.disabled = true;
+            timerDisplay.className = "countdown timer-liberacao";
+
+            let timeLeft = 30;
+            updateGlobalUI();
+
+            const interval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.innerText = `Saindo em: ${timeLeft}s`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    activeSlots--;
+                    startCooldown(card, btn, timerDisplay);
+                }
+            }, 1000);
+        }
+
+        function startCooldown(card, btn, timerDisplay) {
+            card.dataset.inCooldown = "true";
+            btn.classList.remove('timer-active');
+            btn.classList.add('cooldown-active');
+            btn.innerText = "AGUARDANDO";
+            timerDisplay.className = "countdown timer-espera";
+
+            let cooldownLeft = COOLDOWN_TIME;
+            updateGlobalUI();
+
+            const cooldownInterval = setInterval(() => {
+                cooldownLeft--;
+                let mins = Math.floor(cooldownLeft / 60);
+                let secs = cooldownLeft % 60;
+                timerDisplay.innerText = `Espera: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+
+                if (cooldownLeft <= 0) {
+                    clearInterval(cooldownInterval);
+                    card.dataset.inCooldown = "false";
+                    btn.classList.remove('cooldown-active');
+                    btn.innerText = "LIBERADO";
+                    timerDisplay.innerText = "";
+                    updateGlobalUI();
+                }
+            }, 1000);
+        }
+
+        function addNewInstructor() {
+            const input = document.getElementById('new-name');
+            if (input.value.trim()) {
+                createInstructorCard(input.value.trim());
+                input.value = '';
+            }
+        }
+
+        // Inicializar sistema
+        initialInstructors.forEach(name => createInstructorCard(name));
+    </script>
+</body>
+</html>

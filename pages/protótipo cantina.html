@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDV - Sistema de Auditoria v5</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --bg: #f1f5f9;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 350px; gap: 20px; }
+        
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative; }
+        h2 { margin-top: 0; color: var(--secondary); border-bottom: 2px solid #eee; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+
+        /* Grade de Produtos */
+        .grid-produtos { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+        .btn-produto { 
+            background: white; border: 2px solid #e2e8f0; padding: 15px; border-radius: 8px; cursor: pointer;
+            text-align: center; transition: 0.2s;
+        }
+        .btn-produto:hover { border-color: var(--primary); background: #f0f7ff; }
+        .btn-produto b { display: block; margin-bottom: 5px; }
+
+        /* Carrinho Lateral */
+        .item-carrinho { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .total-venda { font-size: 1.8rem; font-weight: bold; margin: 20px 0; text-align: right; color: var(--primary); }
+        
+        .btn-confirmar { width: 100%; background: var(--success); color: white; border: none; padding: 15px; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+        
+        /* Estilo Relatório e Cancelamento */
+        #relatorioArea { grid-column: 1 / -1; margin-top: 30px; display: none; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
+        
+        .venda-cancelada { background-color: #fef2f2; color: #991b1b; }
+        .msg-cancelada { font-weight: bold; color: var(--danger); text-transform: uppercase; font-size: 0.75rem; display: block; }
+        .justificativa-texto { font-style: italic; font-size: 0.85rem; color: #666; }
+
+        .controles-relatorio { display: flex; gap: 10px; }
+        .btn-fechar-relatorio { background: #e2e8f0; color: #475569; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+        .btn-limpar-tudo { background: #fee2e2; color: var(--danger); border: 1px solid var(--danger); padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; font-weight: bold; }
+        .btn-limpar-tudo:hover { background: var(--danger); color: white; }
+
+        .btn-acao-cancelar { background: #fee2e2; color: var(--danger); border: 1px solid var(--danger); padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        .btn-acao-cancelar:hover { background: var(--danger); color: white; }
+
+        /* Modal */
+        #modalJustificativa { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 100; }
+        .modal-content { background: white; padding: 20px; border-radius: 8px; width: 300px; }
+        .modal-content textarea { width: 100%; height: 80px; margin-top: 10px; border: 1px solid #ddd; border-radius: 4px; padding: 5px; font-family: inherit; }
+
+        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <main class="card">
+        <h2>Produtos</h2>
+        <div class="grid-produtos">
+            <button class="btn-produto" onclick="adicionarItem('Pão de Queijo', 4.00)"><b>Pão de Queijo</b> R$ 4,00</button>
+            <button class="btn-produto" onclick="adicionarItem('Empada', 8.50)"><b>Empada</b> R$ 8,50</button>
+            <button class="btn-produto" onclick="adicionarItem('Refrigerante', 5.00)"><b>Refrigerante</b> R$ 5,00</button>
+        </div>
+    </main>
+
+    <aside class="card">
+        <h2>Carrinho</h2>
+        <div id="carrinhoLista"></div>
+        <div class="total-venda" id="totalExibicao">R$ 0,00</div>
+        <h3>Pagamento</h3>
+        <select id="pagamento" style="width: 100%; padding: 10px; margin-bottom: 20px;">
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="PIX">PIX</option>
+        </select>
+        <button class="btn-confirmar" onclick="confirmarVenda()">Finalizar Venda</button>
+        <button onclick="alternarRelatorio()" style="margin-top: 10px; width: 100%; cursor: pointer; padding: 8px;">Ver Histórico / Auditoria</button>
+    </aside>
+
+    <section id="relatorioArea" class="card">
+        <h2>
+            Histórico de Vendas
+            <div class="controles-relatorio">
+                <button class="btn-limpar-tudo" onclick="limparHistoricoTotal()">Zerar Tudo (Novo Dia)</button>
+                <button class="btn-fechar-relatorio" onclick="fecharRelatorio()">Fechar [X]</button>
+            </div>
+        </h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Data/Hora</th>
+                    <th>Produto</th>
+                    <th>Pagamento</th>
+                    <th>Valor</th>
+                    <th>Ações / Status</th>
+                </tr>
+            </thead>
+            <tbody id="corpoRelatorio"></tbody>
+        </table>
+        <div id="resumoFinal" style="text-align: right; margin-top: 20px;"></div>
+    </section>
+</div>
+
+<div id="modalJustificativa">
+    <div class="modal-content">
+        <h3>Motivo do Cancelamento</h3>
+        <textarea id="textoJustificativa" placeholder="Descreva o motivo..."></textarea>
+        <div style="margin-top: 15px; display: flex; gap: 10px;">
+            <button onclick="confirmarCancelamentoNoHistorico()" style="background: var(--danger); color: white; border: none; padding: 8px; flex: 1; border-radius: 4px; cursor: pointer;">Confirmar</button>
+            <button onclick="fecharModal()" style="padding: 8px; flex: 1; border-radius: 4px; cursor: pointer;">Voltar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let carrinho = [];
+    let historicoVendas = JSON.parse(localStorage.getItem('vendas_v5')) || [];
+    let indexParaCancelar = null;
+
+    function adicionarItem(nome, preco) {
+        carrinho.push({ nome, preco });
+        atualizarCarrinho();
+    }
+
+    function atualizarCarrinho() {
+        const lista = document.getElementById('carrinhoLista');
+        const totalExibicao = document.getElementById('totalExibicao');
+        if(carrinho.length === 0) {
+            lista.innerHTML = '<p style="text-align:center; color:#888">Vazio</p>';
+        } else {
+            lista.innerHTML = carrinho.map((item, i) => `
+                <div class="item-carrinho">
+                    <span>${item.nome}</span>
+                    <button onclick="carrinho.splice(${i}, 1); atualizarCarrinho()" style="border:none; color:red; cursor:pointer; background:none">remover</button>
+                    <span>R$ ${item.preco.toFixed(2)}</span>
+                </div>
+            `).join('');
+        }
+        const total = carrinho.reduce((acc, item) => acc + item.preco, 0);
+        totalExibicao.innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+    }
+
+    function confirmarVenda() {
+        if (carrinho.length === 0) return alert("Carrinho vazio!");
+        const formaPagamento = document.getElementById('pagamento').value;
+        
+        carrinho.forEach(item => {
+            historicoVendas.push({
+                nome: item.nome,
+                preco: item.preco,
+                pagamento: formaPagamento,
+                data: new Date().toLocaleString('pt-BR'),
+                cancelada: false,
+                justificativa: ""
+            });
+        });
+
+        salvarLocal();
+        carrinho = [];
+        atualizarCarrinho();
+        alert("Venda registrada!");
+        if (document.getElementById('relatorioArea').style.display === 'block') gerarRelatorio();
+    }
+
+    function salvarLocal() {
+        localStorage.setItem('vendas_v5', JSON.stringify(historicoVendas));
+    }
+
+    // --- FUNÇÕES DO HISTÓRICO ---
+
+    function alternarRelatorio() {
+        const relArea = document.getElementById('relatorioArea');
+        relArea.style.display === 'block' ? fecharRelatorio() : gerarRelatorio();
+    }
+
+    function fecharRelatorio() {
+        document.getElementById('relatorioArea').style.display = 'none';
+    }
+
+    function gerarRelatorio() {
+        const relArea = document.getElementById('relatorioArea');
+        const corpo = document.getElementById('corpoRelatorio');
+        const resumo = document.getElementById('resumoFinal');
+        
+        relArea.style.display = 'block';
+        corpo.innerHTML = '';
+        
+        if (historicoVendas.length === 0) {
+            corpo.innerHTML = '<tr><td colspan="5" style="text-align:center">Nenhuma venda registrada.</td></tr>';
+            resumo.innerHTML = '<h3>TOTAL ATIVO: R$ 0,00</h3>';
+            return;
+        }
+
+        let totalValido = 0;
+
+        historicoVendas.forEach((venda, index) => {
+            let acaoOuStatus = "";
+            let classeFila = "";
+
+            if (venda.cancelada) {
+                classeFila = "venda-cancelada";
+                acaoOuStatus = `
+                    <span class="msg-cancelada">⚠️ ESTA VENDA FOI CANCELADA</span>
+                    <span class="justificativa-texto">Motivo: ${venda.justificativa}</span>
+                `;
+            } else {
+                totalValido += venda.preco;
+                acaoOuStatus = `<button class="btn-acao-cancelar" onclick="abrirModalCancelamento(${index})">Cancelar Venda</button>`;
+            }
+
+            corpo.innerHTML += `
+                <tr class="${classeFila}">
+                    <td>${venda.data}</td>
+                    <td>${venda.nome}</td>
+                    <td>${venda.pagamento}</td>
+                    <td>R$ ${venda.preco.toFixed(2)}</td>
+                    <td>${acaoOuStatus}</td>
+                </tr>
+            `;
+        });
+
+        resumo.innerHTML = `<h3>TOTAL ATIVO EM CAIXA: R$ ${totalValido.toFixed(2).replace('.', ',')}</h3>`;
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    // NOVA FUNÇÃO: Limpar tudo
+    function limparHistoricoTotal() {
+        const confirmacao = confirm("ATENÇÃO: Isso apagará permanentemente TODO o histórico de vendas e cancelamentos. Deseja iniciar um novo dia com o caixa zerado?");
+        
+        if (confirmacao) {
+            historicoVendas = [];
+            salvarLocal();
+            gerarRelatorio();
+            alert("Histórico limpo com sucesso!");
+        }
+    }
+
+    function abrirModalCancelamento(index) {
+        indexParaCancelar = index;
+        document.getElementById('modalJustificativa').style.display = 'flex';
+        document.getElementById('textoJustificativa').value = '';
+    }
+
+    function fecharModal() {
+        document.getElementById('modalJustificativa').style.display = 'none';
+    }
+
+    function confirmarCancelamentoNoHistorico() {
+        const justificativa = document.getElementById('textoJustificativa').value.trim();
+        if (!justificativa) return alert("Você precisa inserir uma justificativa!");
+
+        historicoVendas[indexParaCancelar].cancelada = true;
+        historicoVendas[indexParaCancelar].justificativa = justificativa;
+        
+        salvarLocal();
+        fecharModal();
+        gerarRelatorio();
+    }
+
+    // Inicializar carrinho vazio visualmente
+    atualizarCarrinho();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>SARP - Sistema de Alerta de Risco por Precipitação</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+margin: 0;
+font-family: "Segoe UI", Arial, sans-serif;
+background-color: #f2f6f4;
+color: #2c3e50;
+}
+
+.app {
+max-width: 430px;
+margin: auto;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+background-color: #ffffff;
+box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+header {
+background-color: #1e8449;
+color: white;
+text-align: center;
+padding: 20px;
+}
+
+header h1 {
+margin: 0;
+font-size: 22px;
+}
+
+header p {
+margin: 5px 0 0;
+font-size: 13px;
+opacity: 0.9;
+}
+
+.content { padding: 20px; }
+
+.card {
+background-color: #f8f9f9;
+padding: 15px;
+border-radius: 10px;
+margin-bottom: 15px;
+font-size: 14px;
+line-height: 1.6;
+}
+
+.status {
+padding: 18px;
+border-radius: 10px;
+text-align: center;
+font-weight: bold;
+margin-top: 10px;
+}
+
+.baixo { background-color: #2ecc71; color: white; }
+.medio { background-color: #f1c40f; color: #2c3e50; }
+.alto  { background-color: #e74c3c; color: white; }
+
+button {
+width: 100%;
+padding: 14px;
+background-color: #1e8449;
+color: white;
+border: none;
+border-radius: 8px;
+font-size: 15px;
+font-weight: bold;
+cursor: pointer;
+}
+
+button:hover { background-color: #196f3d; }
+
+.icone {
+font-size: 40px;
+text-align: center;
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+<h1>SARP</h1>
+<p>Sistema de Alerta de Risco por Precipitação</p>
+</header>
+
+<div class="content">
+
+<div class="card">
+Sistema inteligente que utiliza dados meteorológicos reais,
+análise de risco e monitoramento preventivo para chuva e umidade.
+</div>
+
+<div class="card">
+<strong>📍 Local monitorado:</strong><br>
+<span id="localizacao">Conceição do Mato Dentro - MG</span>
+</div>
+
+<div class="card">
+<strong>🌤️ Previsão do tempo:</strong><br>
+<div class="icone" id="iconeClima">⛅</div>
+<span id="previsaoTexto">Aguardando dados...</span>
+</div>
+
+<div id="statusBox" class="status baixo">
+Sistema em monitoramento
+</div>
+
+<div class="card" id="acoes">
+✔️ Sistema inicializado<br>
+✔️ Monitoramento ativo
+</div>
+
+<button onclick="buscarClima()">Atualizar previsão</button>
+
+</div>
+
+<script>
+const apiKey = "3ca4071106e77b1e4853ba4e10cab295";
+
+// Coordenadas fixas de Conceição do Mato Dentro - MG
+const LAT = -19.0347;
+const LON = -43.4226;
+const CIDADE_FIXA = "Conceição do Mato Dentro - MG";
+
+function buscarClima() {
+
+const climaURL = `https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&appid=${apiKey}&units=metric&lang=pt`;
+
+fetch(climaURL)
+.then(res => res.json())
+.then(data => {
+
+if (data.cod !== 200) {
+document.getElementById("previsaoTexto").innerText =
+"Erro ao obter dados meteorológicos";
+return;
+}
+
+document.getElementById("localizacao").innerText = CIDADE_FIXA;
+
+const previsaoTexto = document.getElementById("previsaoTexto");
+const statusBox = document.getElementById("statusBox");
+const acoes = document.getElementById("acoes");
+const iconeClima = document.getElementById("iconeClima");
+
+const descricao = data.weather[0].description;
+const clima = data.weather[0].main.toLowerCase();
+const temp = Math.round(data.main.temp);
+const umidade = data.main.humidity;
+
+previsaoTexto.innerHTML = `
+${descricao}<br>
+🌡️ ${temp}°C<br>
+💧 Umidade: ${umidade}%
+`;
+
+if (clima.includes("rain")) iconeClima.innerText = "🌧️";
+else if (clima.includes("cloud")) iconeClima.innerText = "☁️";
+else if (clima.includes("clear")) iconeClima.innerText = "☀️";
+else iconeClima.innerText = "⛅";
+
+if (clima.includes("rain") && umidade >= 80) {
+statusBox.className = "status alto";
+statusBox.innerText = "🔴 RISCO ALTO DE PRECIPITAÇÃO";
+acoes.innerHTML =
+"🚨 Ações imediatas:<br>" +
+"• Sinalizar áreas escorregadias<br>" +
+"• Bloquear áreas externas<br>" +
+"• Alertar usuários";
+}
+else if (umidade >= 70) {
+statusBox.className = "status medio";
+statusBox.innerText = "🟡 RISCO MODERADO";
+acoes.innerHTML =
+"⚠️ Ações preventivas:<br>" +
+"• Monitoramento reforçado";
+}
+else {
+statusBox.className = "status baixo";
+statusBox.innerText = "🟢 BAIXO RISCO";
+acoes.innerHTML =
+"✔️ Ambiente seguro<br>" +
+"✔️ Monitoramento contínuo";
+}
+
+});
+}
+
+buscarClima();
+setInterval(buscarClima, 600000);
+</script>
+
+</body>
+</html>
