@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub de Projetos Tech - SENAI</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="tech-header">
+        <div class="header-content">
+            <img src="img/logo-senai.png" alt="Logo SENAI" class="senai-logo">            <h1>HUB_DE_PROJETOS<span class="cursor">_</span></h1>
+            <p class="instructor">&gt; Informática para Internet</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="intro-view" class="intro-container glass-panel">
+            <h2>Selecione o Turno:</h2>
+            <div class="class-selection">
+                <button class="btn-class" onclick="selectClass('tarde')">Turma da Tarde</button>
+                <button class="btn-class" onclick="selectClass('noite')">Turma da Noite</button>
+            </div>
+        </div>
+
+        <div id="hub-view" class="hidden">
+            <div class="hub-header">
+                <button class="back-btn" onclick="showIntro()">
+                    <span class="icon">&lt;</span> return to_home();
+                </button>
+                <h2 class="hub-title" id="hub-title-text">Projetos da Turma</h2>
+            </div>
+            <div id="grid-container" class="grid"></div>
+        </div>
+
+        <div id="project-view" class="hidden">
+            <button class="back-btn" onclick="showHub()">
+                <span class="icon">&lt;</span> return to_hub();
+            </button>
+            <div id="project-container" class="project-detail glass-panel">
+                </div>
+        </div>
+    </main>
+
+    <footer class="tech-footer">
+        <div class="footer-content">
+            <p>Iniciativa da unidade curricular de <strong>Projeto de Inovação - Design Thinking e Canvas</strong>.</p>
+            <p>Os alunos desenvolveram e apresentaram propostas focadas na melhoria contínua da unidade.</p>
+            <p><strong>Instrutor Rômulo Gonzaga</strong></p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
