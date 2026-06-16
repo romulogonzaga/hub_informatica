@@ -163,9 +163,7 @@ const projetosTccTarde = [
         imageAlt: "Tela inicial do sistema WorkPilot",
         autores: ["Fernanda", "Gabrielly", "Geiciele", "Gustavo", "Iasmym", "Simara"],
         presentation: "presentation/WorkPilot.pdf",
-        credentials: `Login: qualquer usuário preenchido | Senha: qualquer senha preenchida`,
-        videoPitch: "https://www.youtube.com/watch?v=oFiQ_sREOi8",
-        videoPrototipo: "https://www.youtube.com/watch?v=gi21K1QcXTo&authuser=0"
+        credentials: `Login: qualquer usuário preenchido | Senha: qualquer senha preenchida`
     },
     {
         id: 102,
@@ -178,9 +176,7 @@ const projetosTccTarde = [
         imageAlt: "Tela de login do sistema TSEA",
         autores: ["Ana Carolayne", "Andreza", "Karla", "Luan", "Rayssa"],
         presentation: "presentation/OperSys.pdf",
-        credentials: `Usuário exibido no print: admin | Código de acesso da área do administrador: 123456`,
-        videoPitch: "https://www.youtube.com/watch?v=0cekiPjWBq0",
-        videoPrototipo: "https://youtu.be/NoJ4uALNIno"
+        credentials: `Usuário: admin | Senha: admin`
     },
     {
         id: 103,
@@ -193,9 +189,7 @@ const projetosTccTarde = [
         imageAlt: "Dashboard inicial do sistema Inventário Ágil",
         autores: ["Davi Augusto", "Erik Richard", "João Pedro", "Maria Eduarda", "Matheus Felipe"],
         presentation: "presentation/Inventário Ágil.pdf",
-        credentials: ``,
-        videoPitch: "https://www.youtube.com/watch?v=vZYPKbFptKU",
-        videoPrototipo: "https://www.youtube.com/watch?authuser=0&v=0PAn8P7H1ks&feature=youtu.be"
+        credentials: ``
     },
     {
         id: 104,
@@ -208,13 +202,72 @@ const projetosTccTarde = [
         imageAlt: "Painel de ocorrências do sistema Fale Fácil Digital",
         autores: ["Victor", "Paulo", "Fellipe", "Heber", "João"],
         presentation: "presentation/Fale Fácil.pdf",
-        credentials: `Admin: admin | Senha: 123<br>Usuário: user | Senha: 123`,
-        videoPitch: "https://youtu.be/y8LveEnLf9c",
-        videoPrototipo: "https://youtu.be/FeNhgxdSy8Q"
+        credentials: `Admin: admin | Senha: 123<br>Usuário: user | Senha: 123`
     }
 ];
 
-const projetosTccNoite = [];
+const projetosTccNoite = [
+    {
+        id: 201,
+        title: "TraceMaster",
+        unidade: "TCC",
+        shortDesc: `Solução de rastreamento e acompanhamento de processos, apresentada por videopitch e demonstração de protótipo.`,
+        fullDesc: `O TraceMaster é um projeto da turma da noite voltado ao acompanhamento e à rastreabilidade de processos. Como os slides do projeto ainda não foram anexados nesta atualização, o cadastro foi feito com as informações enviadas de videopitch e vídeo do protótipo. A descrição completa pode ser complementada posteriormente com problema, público-alvo, integrantes e funcionalidades detalhadas assim que a apresentação for disponibilizada.`,
+        link: "",
+        image: "",
+        imageAlt: "",
+        autores: [],
+        presentation: "",
+        credentials: ``,
+        videoPitch: "https://www.youtube.com/watch?v=cTl_qTayCs4",
+        videoPrototipo: "https://youtu.be/DyU0bvNXzms"
+    },
+    {
+        id: 202,
+        title: "Hidronexus",
+        unidade: "TCC",
+        shortDesc: `Site interativo para ampliar a visibilidade do projeto Guardiãs das Águas, com conteúdos educativos e assistente virtual GuardIA.`,
+        fullDesc: `O Hidronexus, desenvolvido pela Nexus Soluções Digitais, propõe uma plataforma digital para fortalecer a divulgação do projeto Guardiãs das Águas. A solução reúne informações organizadas, conteúdos educativos e uma assistente virtual chamada GuardIA, capaz de responder dúvidas sobre saneamento básico, preservação da água e sobre o próprio projeto. O objetivo é ampliar a visibilidade das ações ambientais, facilitar o acesso a informações claras e incentivar a conscientização da comunidade sobre o uso responsável dos recursos hídricos.`,
+        link: "pages/hidronexus/index.html",
+        image: "img/hidronexus.png",
+        imageAlt: "Tela de apresentação do projeto Hidronexus",
+        autores: ["Raphaela Vieira", "Matheus Oliveira", "Jade Dias", "Lívia Rodrigues", "Isabela Utsch", "Nicolas De Souza"],
+        presentation: "presentation/Hidronexus.pdf",
+        credentials: ``,
+        videoPitch: "https://www.youtube.com/watch?v=fY6FYLrfND0",
+        videoPrototipo: "https://youtu.be/jpjLlP-ZOzo"
+    },
+    {
+        id: 203,
+        title: "Tec&Nova",
+        unidade: "TCC",
+        shortDesc: `Sistema web para organização de chamados, suporte técnico e acompanhamento visual de demandas em empresas.`,
+        fullDesc: `O Tec&Nova é um sistema web leve criado para organizar pedidos de ajuda, chamados de suporte e solicitações internas que antes poderiam se perder em e-mails, anotações ou registros manuais. A proposta central é garantir que nenhum pedido de conserto ou suporte seja esquecido, permitindo que colaboradores abram chamados rapidamente e que a equipe de TI acompanhe as solicitações de forma profissional. O diferencial está no painel visual em formato de cartões coloridos, que mostra demandas pendentes, em andamento e finalizadas, além de gráficos automáticos para apoiar a gestão da produtividade.`,
+        link: "https://0001150903.github.io/Trabalho-de-Conclus-o-de-Curso/",
+        image: "img/tecnova.png",
+        imageAlt: "Tela de apresentação do projeto Tec&Nova",
+        autores: [],
+        presentation: "presentation/Tec&Nova.pdf",
+        credentials: `Usuário: admin | Senha: 123`,
+        videoPitch: "https://www.youtube.com/watch?v=DQM4jcZ6bAQ",
+        videoPrototipo: "https://www.youtube.com/watch?v=MfzAFx3xy-s"
+    },
+    {
+        id: 204,
+        title: "Fluxo Digital",
+        unidade: "TCC",
+        shortDesc: `Portal web para digitalização de processos operacionais, APR, perfis de acesso e solicitações via WhatsApp.`,
+        fullDesc: `O Fluxo Digital transforma processos manuais lentos em soluções digitais rápidas, funcionando diretamente no navegador do celular, tablet ou computador. O sistema trabalha com perfis de acesso, diferenciando Operador e Coordenador, e oferece recursos como envio de informações, gerenciamento, aprovação, registro de ocorrências, Análise Preliminar de Risco (APR) digital e solicitação de ferramentas via WhatsApp. A proposta combina segurança do trabalho e eficiência operacional para reduzir papel, organizar fluxos e garantir que as atividades comecem no momento certo.`,
+        link: "pages/fluxo-digital.html",
+        image: "img/fluxo-digital.png",
+        imageAlt: "Tela de apresentação do projeto Fluxo Digital",
+        autores: ["Heitor", "Alexandre", "Kayky", "Mateus", "Yara", "Silas"],
+        presentation: "presentation/Fluxo Digital.pdf",
+        credentials: `Digite qualquer nome completo e selecione o perfil desejado para acessar.`,
+        videoPitch: "https://youtu.be/-wCSDFF5CpA",
+        videoPrototipo: "https://youtu.be/66-WCRF4P0g"
+    }
+];
 
 const introView = document.getElementById('intro-view');
 const categoryView = document.getElementById('category-view');
@@ -334,17 +387,6 @@ function showProject(id, projetosArray) {
             </div>
         `;
     }
-    let videosHTML = '';
-    if (proj.videoPitch || proj.videoPrototipo) {
-        videosHTML = `
-            <div class="project-videos">
-                <strong>&gt; VIDEOS_DO_PROJETO:</strong><br>
-                ${proj.videoPitch ? `<a href="${proj.videoPitch}" target="_blank" class="btn-acessar">Assistir Pitch</a>` : ''}
-                ${proj.videoPrototipo ? `<a href="${proj.videoPrototipo}" target="_blank" class="btn-acessar">Vídeo do Protótipo</a>` : ''}
-            </div>
-        `;
-    }
-
     // Tratamento para esconder o botão caso o link esteja em branco
     let linkHTML = '';
     if (proj.link && proj.link !== "") {
@@ -360,7 +402,6 @@ function showProject(id, projetosArray) {
             <div class="project-text">
                 <p>${proj.fullDesc}</p>
                 ${linkHTML}
-                ${videosHTML}
                 ${credentialsHTML}
             </div>
             ${imageHTML}

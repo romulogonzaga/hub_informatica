@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal LHOST - Gestão Industrial</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root { --primary: #1a252f; --secondary: #2c3e50; --accent: #3498db; --success: #27ae60; --danger: #e74c3c; --light: #f4f7f6; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--light); color: #333; }
+        .hidden { display: none !important; }
+        
+        /* Layout */
+        header { background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        nav { background: var(--secondary); display: flex; overflow-x: auto; sticky: top; }
+        nav button { background: none; border: none; color: #bdc3c7; padding: 1rem 1.5rem; cursor: pointer; font-weight: bold; border-bottom: 3px solid transparent; }
+        nav button:hover { color: white; }
+        nav button.active { color: white; border-bottom: 3px solid var(--accent); }
+
+        .container { padding: 25px; max-width: 1100px; margin: auto; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 25px; border-top: 5px solid var(--accent); }
+        
+        /* Forms */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        /* Login */
+        #login-screen { height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--primary); }
+        .login-card { background: white; padding: 40px; border-radius: 15px; width: 350px; text-align: center; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { padding: 12px; border: 1px solid #eee; text-align: left; }
+        th { background: #f8f9fa; color: var(--primary); }
+
+        .btn { padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-success { background: var(--success); color: white; }
+    </style>
+</head>
+<body>
+
+<div id="login-screen">
+    <div class="login-card">
+        <h1 style="color: var(--primary)">LHOST</h1>
+        <p>Acesse o Portal de Operações</p>
+        <div class="form-group">
+            <input type="text" id="username" placeholder="Seu Nome Completo">
+        </div>
+        <div class="form-group">
+            <select id="user-role">
+                <option value="operador">Perfil: Operador</option>
+                <option value="coordenador">Perfil: Coordenador</option>
+            </select>
+        </div>
+        <button onclick="login()" class="btn btn-primary" style="width: 100%">Entrar no Sistema</button>
+    </div>
+</div>
+
+<div id="main-app" class="hidden">
+    <header>
+        <div><strong></strong> | Gestão Ativa</div>
+        <div id="user-info"></div>
+    </header>
+
+    <nav id="main-nav">
+        </nav>
+
+    <div class="container">
+        <section id="tab-dds" class="tab-content">
+            <div class="card">
+                <h3>Escala de DDS Semanal</h3>
+                <table>
+                    <thead><tr><th>Dia</th><th>Tema de Segurança</th><th>Responsável</th></tr></thead>
+                    <tbody>
+                        <tr><td>Segunda</td><td>Uso de Proteção Facial</td><td>João Silva</td></tr>
+                        <tr><td>Terça</td><td>Bloqueio de Energias (LOTO)</td><td>Maria Oliveira</td></tr>
+                        <tr><td>Quarta</td><td>Organização do Posto de Trabalho</td><td>Ricardo Santos</td></tr>
+                        <tr><td>Quinta</td><td>Manuseio de Químicos</td><td>Ana Souza</td></tr>
+                        <tr><td>Sexta</td><td>Prevenção de Incêndios</td><td>Carlos Lima</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="tab-reclamar" class="tab-content hidden">
+            <div class="card">
+                <h3>Registrar Ocorrência / Reclamação</h3>
+                <div class="form-group">
+                    <label>Setor da Ocorrência</label>
+                    <input type="text" id="rec-setor" placeholder="Ex: Linha de Montagem 02">
+                </div>
+                <div class="form-group">
+                    <label>Descrição Detalhada</label>
+                    <textarea id="rec-texto" rows="4" placeholder="Descreva o problema ou sugestão..."></textarea>
+                </div>
+                <button onclick="enviarReclamacao()" class="btn btn-primary">Enviar ao Coordenador</button>
+            </div>
+        </section>
+
+        <section id="tab-ver-reclamacoes" class="tab-content hidden">
+            <div class="card">
+                <h3>Mural de Reclamações Recebidas</h3>
+                <div id="lista-reclamacoes"></div>
+            </div>
+        </section>
+
+        <section id="tab-risco" class="tab-content hidden">w
+            <div class="card">
+                <h3>Análise Preliminar de Risco (APR)</h3>
+                <p style="background: #e1f5fe; padding: 10px; border-radius: 5px;">📍 <strong>Máquina:</strong> CNC-08 (Escaneado via QR Code)</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0;">
+                    <label><input type="checkbox" class="risk-item" value="Ruído"> [ ] Ruído Excessivo</label>
+                    <label><input type="checkbox" class="risk-item" value="Calor"> [ ] Calor/Temperatura</label>
+                    <label><input type="checkbox" class="risk-item" value="Corte"> [ ] Risco de Corte</label>
+                    <label><input type="checkbox" class="risk-item" value="Eletricidade"> [ ] Choque Elétrico</label>
+                    <label><input type="checkbox" class="risk-item" value="Ergonomia"> [ ] Postura Inadequada</label>
+                    <label><input type="checkbox" class="risk-item" value="Químico"> [ ] Contato Químico</label>
+                </div>
+                <button onclick="enviarAPR()" class="btn btn-success">Enviar para Aprovação</button>
+            </div>
+        </section>
+
+        <section id="tab-aprovacao-apr" class="tab-content hidden">
+            <div class="card">
+                <h3>APRs Pendentes de Assinatura</h3>
+                <div id="lista-aprs"></div>
+            </div>
+        </section>
+
+
+
+
+        <section id="tab-ferramentas" class="tab-content hidden">
+    <div class="card">
+        <h3>Solicitação de Ferramentas via WhatsApp</h3>
+        
+        <div style="background: #fdf9e7; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <label>📱 Número da Ferramentaria (WhatsApp)</label>
+            <input type="text" id="tool-phone" placeholder="Ex: 5531988887777" style="max-width: 250px;">
+            <button onclick="savePhone()" class="btn" style="background:#555; color:white; padding: 5px 15px;">Salvar Número</button>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group"><label>Empresa/Setor</label><input type="text" id="tool-setor" value="LHOST - Produção"></div>
+            <div class="form-group"><label>Matrícula</label><input type="text" id="tool-matricula" placeholder="000000"></div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group"><label>Solicitante (Operador)</label><input type="text" id="tool-user" readonly></div>
+            <div class="form-group"><label>Solicitante Técnico</label><input type="text" id="tool-tecnico" placeholder="Nome do técnico"></div>
+        </div>
+
+        <div class="form-group"><label>Responsável pelo Setor</label><input type="text" id="tool-responsavel" placeholder="Nome do responsável"></div>
+
+        <hr>
+
+        <div class="grid-2">
+            <div class="form-group"><label>Item Solicitado</label><input type="text" id="tool-item" placeholder="Ex: Chave de Fenda"></div>
+            <div class="form-group"><label>Quantidade</label><input type="number" id="tool-qtd" value="1"></div>
+        </div>
+
+        <div class="grid-2">
+            
+            <div class="form-group"><label>Data de Entrega</label><input type="date" id="tool-date"></div>
+        </div>
+
+        <div class="grid-2">
+            <div class="form-group"><label>Prazo Limite</label><input type="date" id="tool-deadline"></div>
+         
+        </div>
+
+        <button onclick="enviarWhatsAppFerramenta()" class="btn btn-success" style="background: #25D366; width: 100%; font-size: 1.1rem;">
+            Gerar Mensagem e Enviar WhatsApp
+        </button>
+    </div>
+</section>
+    
+
+<script>
+    let user = { name: '', role: '' };
+
+    function login() {
+        user.name = document.getElementById('username').value;
+        user.role = document.getElementById('user-role').value;
+        if(!user.name) return alert("Digite seu nome.");
+
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('main-app').classList.remove('hidden');
+        document.getElementById('user-info').innerHTML = `<strong>${user.name}</strong> (${user.role}) <button onclick="location.reload()" style="margin-left:10px">Sair</button>`;
+        
+        setupNav();
+        document.getElementById('tool-user').value = user.name;
+        document.getElementById('tool-phone').value = localStorage.getItem('contato_ferramentaria') || "";
+        showTab('dds');
+    }
+
+    function setupNav() {
+        const nav = document.getElementById('main-nav');
+        let html = `<button onclick="showTab('dds')">DDS Semanal</button>`;
+        
+        if(user.role === 'operador') {
+            html += `<button onclick="showTab('risco')">Análise de Risco</button>`;
+            html += `<button onclick="showTab('reclamar')">Reclamações</button>`;
+        } else {
+            html += `<button onclick="showTab('aprovacao-apr')">Aprovar APRs</button>`;
+            html += `<button onclick="showTab('ver-reclamacoes')">Mural Reclamações</button>`;
+        }
+        
+        html += `<button onclick="showTab('ferramentas')">Ferramentaria</button>`;
+        nav.innerHTML = html;
+    }
+
+    function showTab(id) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+        document.getElementById('tab-' + id).classList.remove('hidden');
+    }
+
+    // --- RECLAMAÇÕES ---
+    function enviarReclamacao() {
+        const dados = {
+            id: Date.now(),
+            autor: user.name,
+            setor: document.getElementById('rec-setor').value,
+            texto: document.getElementById('rec-texto').value,
+            data: new Date().toLocaleString()
+        };
+        let lista = JSON.parse(localStorage.getItem('reclamacoes') || "[]");
+        lista.push(dados);
+        localStorage.setItem('reclamacoes', JSON.stringify(lista));
+        alert("Reclamação enviada com sucesso!");
+        document.getElementById('rec-texto').value = "";
+    }
+
+    function carregarReclamacoesCoord() {
+        const lista = JSON.parse(localStorage.getItem('reclamacoes') || "[]");
+        const container = document.getElementById('lista-reclamacoes');
+        if(lista.length === 0) { container.innerHTML = "Nenhuma reclamação registrada."; return; }
+
+        container.innerHTML = lista.map(r => `
+            <div style="border-left: 4px solid var(--danger); padding: 10px; margin-bottom: 10px; background: #fff5f5">
+                <strong>Setor: ${r.setor}</strong> <br>
+                <small>${r.data} - Por: ${r.autor}</small> <br>
+                <p>${r.texto}</p>
+            </div>
+        `).join('');
+    }
+
+    // --- ANÁLISE DE RISCO (APR) ---
+    function enviarAPR() {
+        const marcados = Array.from(document.querySelectorAll('.risk-item:checked')).map(i => i.value);
+        if(marcados.length === 0) return alert("Selecione os riscos.");
+        
+        let aprs = JSON.parse(localStorage.getItem('aprs') || "[]");
+        aprs.push({ id: Date.now(), user: user.name, riscos: marcados, data: new Date().toLocaleString() });
+        localStorage.setItem('aprs', JSON.stringify(aprs));
+        alert("APR enviada para o Coordenador.");
+        document.querySelectorAll('.risk-item').forEach(i => i.checked = false);
+    }
+
+    function carregarAPRs() {
+        const lista = JSON.parse(localStorage.getItem('aprs') || "[]");
+        const container = document.getElementById('lista-aprs');
+        container.innerHTML = lista.map(a => `
+            <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px;">
+                <strong>Operador:</strong> ${a.user} | <strong>Riscos:</strong> ${a.riscos.join(', ')}
+                <br><button onclick="gerarPDF(${a.id})" class="btn-success">Aprovar e PDF</button>
+            </div>
+        `).join('');
+    }
+
+    function gerarPDF(id) {
+        let aprs = JSON.parse(localStorage.getItem('aprs') || "[]");
+        const item = aprs.find(a => a.id === id);
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.text("LHOST - APR APROVADA", 10, 10);
+        doc.text(`Responsável: ${item.user}`, 10, 20);
+        doc.text(`Data: ${item.data}`, 10, 30);
+        doc.text(`Riscos Identificados: ${item.riscos.join(', ')}`, 10, 40);
+        doc.save(`APR_${id}.pdf`);
+        localStorage.setItem('aprs', JSON.stringify(aprs.filter(a => a.id !== id)));
+        carregarAPRs();
+    }
+
+    // --- FERRAMENTARIA ---
+    function savePhone() {
+        const p = document.getElementById('tool-phone').value;
+        localStorage.setItem('contato_ferramentaria', p);
+        alert("Número salvo!");
+    }
+
+function enviarWhatsAppFerramenta() {
+    // Pega o telefone e remove qualquer caractere que não seja número
+    let fone = document.getElementById('tool-phone').value.replace(/\D/g, '');
+    
+    if(!fone) return alert("Por favor, configure o número da ferramentaria primeiro.");
+
+    // Garante código do país se o usuário não digitar
+    if (fone.length <= 11) fone = "55" + fone;
+
+    // Captura dos novos campos
+    const matricula = document.getElementById('tool-matricula').value;
+    const solicitanteTecnico = document.getElementById('tool-tecnico').value;
+    const responsavel = document.getElementById('tool-responsavel').value;
+    
+    // Dados anteriores
+    const setor = document.getElementById('tool-setor').value;
+    const solicitante = user.name;
+    const item = document.getElementById('tool-item').value;
+    const qtd = document.getElementById('tool-qtd').value;
+    const dataEntrega = document.getElementById('tool-date').value;
+    const prazo = document.getElementById('tool-deadline').value;
+
+
+    // Montagem da mensagem formatada para WhatsApp
+    const msg = `*SOLICITAÇÃO DE FERRAMENTA - LHOST*
+------------------------------
+*Setor:* ${setor}
+*Matrícula:* ${matricula}
+*Solicitante (Op):* ${solicitante}
+*Solicitante Técnico:* ${solicitanteTecnico}
+*Responsável:* ${responsavel}
+------------------------------
+*Item:* ${item}
+*Qtd:* ${qtd}
+------------------------------
+*Data Entrega:* ${dataEntrega}
+*Prazo Limite:* ${prazo}
+-------------------------`;
+
+    // Link usando a API oficial para evitar bloqueios de segurança de rede
+    const url = `https://api.whatsapp.com/send?phone=${fone}&text=${encodeURIComponent(msg)}`;
+    
+    window.open(url, '_blank').focus();
+}
+
+    // Polling simples para atualizar telas do coordenador
+    setInterval(() => {
+        if(user.role === 'coordenador') {
+            carregarReclamacoesCoord();
+            carregarAPRs();
+        }
+    }, 3000);
+
+</script>
+</body>
+</html>

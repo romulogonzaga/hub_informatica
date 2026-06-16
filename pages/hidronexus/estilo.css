@@ -1,0 +1,133 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+    --azul-profundo: #003366;
+    --azul-claro: #0077b6;
+    --ciano-agua: #90e0ef;
+    --branco-puro: #ffffff;
+    --cinza-suave: #f4f7f6;
+    --verde-sustentavel: #2d6a4f;
+}
+
+body {
+    background-color: var(--cinza-suave);
+    color: #333;
+    line-height: 1.6;
+}
+
+
+header {
+    background-color: var(--azul-profundo);
+    color: var(--branco-puro);
+    padding: 1.5rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav a {
+    color: var(--branco-puro);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: var(--ciano-agua);
+}
+
+
+#hero {
+    background: linear-gradient(rgba(0,51,102,0.8), rgba(0,119,182,0.8)), 
+                url('https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?auto=format&fit=crop&q=80&w=1600') center/cover;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: var(--branco-puro);
+    padding: 0 10%;
+}
+
+#hero h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+#hero button {
+    background-color: var(--verde-sustentavel);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    margin-top: 20px;
+}
+
+#hero button:hover {
+    transform: scale(1.05);
+}
+
+section {
+    padding: 4rem 10%;
+}
+
+h3 {
+    color: var(--azul-profundo);
+    margin-bottom: 1.5rem;
+    border-bottom: 3px solid var(--ciano-agua);
+    display: inline-block;
+}
+
+#projetos article {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px
+}
+.btn-instagram {
+    background: linear-gradient(45deg, #4527af 0%, #3c4de6 25%, #2a27dc 50%, #2f22e9 75%, #1e22fc 100%);
+    color: white;
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 10px;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    display: inline-block;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+
+  .btn-instagram:hover {
+    transform: scale(1.05); 
+    color: white;
+  }
+  #projeto article {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px
+  }
