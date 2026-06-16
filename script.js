@@ -149,7 +149,68 @@ const projetosTarde = [
     }
 ];
 
+
+// Banco de Dados dos Projetos - TCC - Turma da Tarde
+const projetosTccTarde = [
+    {
+        id: 101,
+        title: "WorkPilot",
+        unidade: "TCC",
+        shortDesc: `Sistema de gestão de produção para controle de ordens de serviço, etapas produtivas e rastreabilidade visual em tempo real.`,
+        fullDesc: `O WorkPilot é um sistema de gestão de produção voltado ao acompanhamento de Ordens de Serviço em empresas gráficas e indústrias de produção personalizada. A proposta resolve a dificuldade de identificar em qual etapa cada pedido se encontra, reduzindo gargalos, melhorando a rastreabilidade e apoiando decisões mais rápidas. O painel organiza o fluxo em etapas como pré-impressão, impressão, corte, acabamento e expedição, com controle visual por cores, atualização de status e visão em tempo real.`,
+        link: "https://iasmym705.github.io/prototipo-oficial/",
+        image: "img/workpilot.png",
+        imageAlt: "Tela inicial do sistema WorkPilot",
+        autores: ["Fernanda", "Gabrielly", "Geiciele", "Gustavo", "Iasmym", "Simara"],
+        presentation: "presentation/WorkPilot.pdf",
+        credentials: `Login: qualquer usuário preenchido | Senha: qualquer senha preenchida`
+    },
+    {
+        id: 102,
+        title: "OperSys / TSEA",
+        unidade: "TCC",
+        shortDesc: `Sistema web para digitalização, armazenamento, distribuição e gestão de desenhos técnicos e instruções de trabalho.`,
+        fullDesc: `O OperSys/TSEA propõe uma plataforma web funcional para digitalizar o fluxo de desenhos técnicos, reduzindo o uso excessivo de papel e evitando problemas de desatualização. O sistema permite o envio rápido e seguro de documentos, armazenamento das versões mais recentes, distribuição de instruções e comunicação interna entre engenharia e técnicos. A solução foi pensada para tornar o acesso aos documentos técnicos mais organizado, rastreável e seguro dentro da empresa.`,
+        link: "https://0001052565-dev.github.io/TCC-TSEA/",
+        image: "img/tsea.png",
+        imageAlt: "Tela de login do sistema TSEA",
+        autores: ["Ana Carolayne", "Andreza", "Karla", "Luan", "Rayssa"],
+        presentation: "presentation/OperSys.pdf",
+        credentials: `Usuário exibido no print: admin | Senha: não confirmada no código público analisado`
+    },
+    {
+        id: 103,
+        title: "Inventário Ágil",
+        unidade: "TCC",
+        shortDesc: `Sistema de gerenciamento de estoque para pequenos e médios negócios de alimentação com foco em controle, previsibilidade e redução de desperdícios.`,
+        fullDesc: `O Inventário Ágil é uma solução para negócios de alimentação que ainda dependem de controles manuais, sofrem com fragilidade no estoque, deslocamento excessivo de colaboradores e baixa previsibilidade de compras e produção. A proposta organiza o controle visual do estoque, vencimentos, fichas técnicas e planejamento, ajudando a reduzir desperdícios, padronizar operações e melhorar a tomada de decisão com uma gestão Lean de baixo custo.`,
+        link: "https://0001151168-lgtb.github.io/prototipo/",
+        image: "img/inventario-agil.png",
+        imageAlt: "Dashboard inicial do sistema Inventário Ágil",
+        autores: ["Davi Augusto", "Erik Richard", "João Pedro", "Maria Eduarda", "Matheus Felipe"],
+        presentation: "presentation/Inventário Ágil.pdf",
+        credentials: ``
+    },
+    {
+        id: 104,
+        title: "Fale Fácil Digital",
+        unidade: "TCC",
+        shortDesc: `Sistema digital para registro, acompanhamento e gestão automatizada de ocorrências antes feitas em formulários físicos.`,
+        fullDesc: `O Fale Fácil Digital foi criado para substituir o registro manual de ocorrências em formulários físicos deixados na portaria. A solução oferece um sistema automatizado para relatar problemas, registrar chamados, acompanhar estatísticas e facilitar a comunicação interna. Com isso, o processo de preenchimento fica mais prático e o tratamento das reclamações se torna mais ágil, organizado e rastreável.`,
+        link: "https://victorgabrielpa.github.io/Fale-F-cil-Digital/",
+        image: "img/fale-facil.png",
+        imageAlt: "Painel de ocorrências do sistema Fale Fácil Digital",
+        autores: ["Victor", "Paulo", "Fellipe", "Heber", "João"],
+        presentation: "presentation/Fale Fácil.pdf",
+        credentials: `Admin: admin | Senha: 123<br>Usuário: user | Senha: 123`
+    }
+];
+
+const projetosTccNoite = [];
+
 const introView = document.getElementById('intro-view');
+const categoryView = document.getElementById('category-view');
+const categoryTitleText = document.getElementById('category-title-text');
 const hubView = document.getElementById('hub-view');
 const projectView = document.getElementById('project-view');
 const projectContainer = document.getElementById('project-container');
@@ -157,32 +218,64 @@ const gridContainer = document.getElementById('grid-container');
 const hubTitleText = document.getElementById('hub-title-text');
 
 let currentClassData = [];
+let currentTurno = '';
+let currentUnit = 'design';
 
-// Seleção de turma e transição para o Hub
+// Seleção de turma e transição para a escolha da unidade
 function selectClass(turno) {
+    currentTurno = turno;
+    currentUnit = '';
+
     if (turno === 'noite') {
         currentClassData = projetosNoite;
-        hubTitleText.innerText = "Projetos - Turma da Noite";
-        introView.classList.add('hidden');
-        renderHub(currentClassData);
-        hubView.classList.remove('hidden');
+        categoryTitleText.innerText = "Turma da Noite";
     } else if (turno === 'tarde') {
         currentClassData = projetosTarde;
-        hubTitleText.innerText = "Projetos - Turma da Tarde";
-        introView.classList.add('hidden');
-        renderHub(currentClassData);
-        hubView.classList.remove('hidden');
+        categoryTitleText.innerText = "Turma da Tarde";
     }
+
+    introView.classList.add('hidden');
+    categoryView.classList.remove('hidden');
+}
+
+// Seleção da unidade após o turno
+function selectCategory(unidade) {
+    currentUnit = unidade;
+
+    if (unidade === 'design') {
+        currentClassData = currentTurno === 'noite' ? projetosNoite : projetosTarde;
+        hubTitleText.innerText = currentTurno === 'noite'
+            ? "Design Thinking - Turma da Noite"
+            : "Design Thinking - Turma da Tarde";
+        renderHub(currentClassData);
+    } else if (unidade === 'tcc') {
+        currentClassData = currentTurno === 'noite' ? projetosTccNoite : projetosTccTarde;
+        hubTitleText.innerText = currentTurno === 'noite'
+            ? "TCC - Turma da Noite"
+            : "TCC - Turma da Tarde";
+        renderHub(currentClassData);
+    }
+
+    categoryView.classList.add('hidden');
+    hubView.classList.remove('hidden');
+    window.scrollTo(0, 0);
 }
 
 // Renderização dos cards baseada nos dados da turma
 function renderHub(projetos) {
     gridContainer.innerHTML = '';
+
+    if (!projetos || projetos.length === 0) {
+        gridContainer.innerHTML = `<div class="project-empty">&gt; Nenhum projeto cadastrado para esta seleção no momento.</div>`;
+        return;
+    }
+
     projetos.forEach(proj => {
         const card = document.createElement('div');
         card.className = 'card';
         card.onclick = () => showProject(proj.id, projetos);
         card.innerHTML = `
+            ${proj.unidade ? `<span class="project-tag">${proj.unidade}</span>` : ''}
             <h2>${proj.title}</h2>
             <p>${proj.shortDesc}</p>
             <span class="btn-ler-mais">iniciar_execucao() &gt;</span>
@@ -218,11 +311,21 @@ function showProject(id, projetosArray) {
         presentationHTML = `
             <div class="project-presentation">
                 <h3 class="presentation-title">> SLIDES_DE_APRESENTACAO.pdf</h3>
+                <a href="${proj.presentation}" target="_blank" class="btn-acessar">Abrir Apresentação</a>
                 <iframe src="${proj.presentation}" class="presentation-frame" title="Apresentação do Projeto"></iframe>
             </div>
         `;
     }
     
+
+    let credentialsHTML = '';
+    if (proj.credentials && proj.credentials.trim() !== '') {
+        credentialsHTML = `
+            <div class="project-credentials">
+                <strong>&gt; CREDENCIAIS_DE_TESTE:</strong><br>${proj.credentials}
+            </div>
+        `;
+    }
     // Tratamento para esconder o botão caso o link esteja em branco
     let linkHTML = '';
     if (proj.link && proj.link !== "") {
@@ -238,6 +341,7 @@ function showProject(id, projetosArray) {
             <div class="project-text">
                 <p>${proj.fullDesc}</p>
                 ${linkHTML}
+                ${credentialsHTML}
             </div>
             ${imageHTML}
         </div>
@@ -258,6 +362,7 @@ function showHub() {
 
 // Voltar da grade da turma para a tela inicial (seleção de turno)
 function showIntro() {
+    categoryView.classList.add('hidden');
     hubView.classList.add('hidden');
     projectView.classList.add('hidden');
     introView.classList.remove('hidden');

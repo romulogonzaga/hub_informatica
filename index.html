@@ -29,6 +29,18 @@
             </div>
         </div>
 
+        <div id="category-view" class="intro-container glass-panel hidden">
+            <button class="back-btn category-back" onclick="showIntro()">
+                <span class="icon">&lt;</span> return to_turnos();
+            </button>
+            <h2 id="category-title-text">Selecione a Unidade:</h2>
+            <p class="category-subtitle">Escolha qual conjunto de projetos deseja visualizar.</p>
+            <div class="class-selection category-selection">
+                <button class="btn-class" onclick="selectCategory('design')">Design Thinking</button>
+                <button class="btn-class" onclick="selectCategory('tcc')">TCC</button>
+            </div>
+        </div>
+
         <div id="hub-view" class="hidden">
             <div class="hub-header">
                 <button class="back-btn" onclick="showIntro()">
