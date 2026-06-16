@@ -163,7 +163,9 @@ const projetosTccTarde = [
         imageAlt: "Tela inicial do sistema WorkPilot",
         autores: ["Fernanda", "Gabrielly", "Geiciele", "Gustavo", "Iasmym", "Simara"],
         presentation: "presentation/WorkPilot.pdf",
-        credentials: `Login: qualquer usuário preenchido | Senha: qualquer senha preenchida`
+        credentials: `Login: qualquer usuário preenchido | Senha: qualquer senha preenchida`,
+        videoPitch: "https://www.youtube.com/watch?v=oFiQ_sREOi8",
+        videoPrototipo: "https://www.youtube.com/watch?v=gi21K1QcXTo&authuser=0"
     },
     {
         id: 102,
@@ -176,7 +178,9 @@ const projetosTccTarde = [
         imageAlt: "Tela de login do sistema TSEA",
         autores: ["Ana Carolayne", "Andreza", "Karla", "Luan", "Rayssa"],
         presentation: "presentation/OperSys.pdf",
-        credentials: `Usuário exibido no print: admin | Senha: não confirmada no código público analisado`
+        credentials: `Usuário exibido no print: admin | Código de acesso da área do administrador: 123456`,
+        videoPitch: "https://www.youtube.com/watch?v=0cekiPjWBq0",
+        videoPrototipo: "https://youtu.be/NoJ4uALNIno"
     },
     {
         id: 103,
@@ -189,7 +193,9 @@ const projetosTccTarde = [
         imageAlt: "Dashboard inicial do sistema Inventário Ágil",
         autores: ["Davi Augusto", "Erik Richard", "João Pedro", "Maria Eduarda", "Matheus Felipe"],
         presentation: "presentation/Inventário Ágil.pdf",
-        credentials: ``
+        credentials: ``,
+        videoPitch: "https://www.youtube.com/watch?v=vZYPKbFptKU",
+        videoPrototipo: "https://www.youtube.com/watch?authuser=0&v=0PAn8P7H1ks&feature=youtu.be"
     },
     {
         id: 104,
@@ -202,7 +208,9 @@ const projetosTccTarde = [
         imageAlt: "Painel de ocorrências do sistema Fale Fácil Digital",
         autores: ["Victor", "Paulo", "Fellipe", "Heber", "João"],
         presentation: "presentation/Fale Fácil.pdf",
-        credentials: `Admin: admin | Senha: 123<br>Usuário: user | Senha: 123`
+        credentials: `Admin: admin | Senha: 123<br>Usuário: user | Senha: 123`,
+        videoPitch: "https://youtu.be/y8LveEnLf9c",
+        videoPrototipo: "https://youtu.be/FeNhgxdSy8Q"
     }
 ];
 
@@ -326,6 +334,17 @@ function showProject(id, projetosArray) {
             </div>
         `;
     }
+    let videosHTML = '';
+    if (proj.videoPitch || proj.videoPrototipo) {
+        videosHTML = `
+            <div class="project-videos">
+                <strong>&gt; VIDEOS_DO_PROJETO:</strong><br>
+                ${proj.videoPitch ? `<a href="${proj.videoPitch}" target="_blank" class="btn-acessar">Assistir Pitch</a>` : ''}
+                ${proj.videoPrototipo ? `<a href="${proj.videoPrototipo}" target="_blank" class="btn-acessar">Vídeo do Protótipo</a>` : ''}
+            </div>
+        `;
+    }
+
     // Tratamento para esconder o botão caso o link esteja em branco
     let linkHTML = '';
     if (proj.link && proj.link !== "") {
@@ -341,6 +360,7 @@ function showProject(id, projetosArray) {
             <div class="project-text">
                 <p>${proj.fullDesc}</p>
                 ${linkHTML}
+                ${videosHTML}
                 ${credentialsHTML}
             </div>
             ${imageHTML}
