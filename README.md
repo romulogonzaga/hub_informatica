@@ -45,4 +45,4 @@ O resultado é este Hub: uma *Single Page Application* (SPA) com estética "Cybe
 
 ### Visualizar Online (Recomendado)
 Acesse a página hospedada diretamente pelo GitHub Pages:
-👉 **https://romulogonzaga.github.io/hub-de-projetos/**
+👉 **[https://romulogonzaga.github.io/hub-de-projetos/]**
