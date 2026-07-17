@@ -236,7 +236,7 @@ const projetosTccNoite = [
         unidade: "TCC",
         shortDesc: `Site interativo para ampliar a visibilidade do projeto Guardiãs das Águas, com conteúdos educativos e assistente virtual GuardIA.`,
         fullDesc: `O Hidronexus, desenvolvido pela Nexus Soluções Digitais, propõe uma plataforma digital para fortalecer a divulgação do projeto Guardiãs das Águas. A solução reúne informações organizadas, conteúdos educativos e uma assistente virtual chamada GuardIA, capaz de responder dúvidas sobre saneamento básico, preservação da água e sobre o próprio projeto. O objetivo é ampliar a visibilidade das ações ambientais, facilitar o acesso a informações claras e incentivar a conscientização da comunidade sobre o uso responsável dos recursos hídricos.`,
-        link: "pages/hidronexus/index.html",
+        link: "https://leverdeis.github.io/hidronexus/index.html",
         image: "img/hidronexus.png",
         imageAlt: "Tela de apresentação do projeto Hidronexus",
         autores: ["Raphaela Vieira", "Matheus Oliveira", "Jade Dias", "Lívia Rodrigues", "Isabela Utsch", "Nicolas De Souza"],
