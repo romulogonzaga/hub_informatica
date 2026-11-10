@@ -36,6 +36,13 @@ O resultado é este Hub: uma *Single Page Application* (SPA) com estética "Cybe
 9. **InfraTech:** App de check-in para classificação de gravidade e rastreio de manutenção predial.
 10. **SARP (Sistema de Alerta):** Monitoramento climático em tempo real para prevenção de acidentes na unidade.
 11. **InovaTech:** Catálogo digital inteligente com status instantâneo do acervo da biblioteca.
+12. **SGE (Gestão de Eventos):** Plataforma para prevenção de choque de horários na reserva de salas.
+13. **WaitGo:** Sistema em rede para controle de fluxo e liberação espaçada de turmas na catraca.
+
+## Como acessar
+
+**[Acessar o Hub de Projetos](https://romulogonzaga.github.io/hub_informatica/)**
+
 ## Executar localmente
 
 1. Clone ou baixe este repositório.
