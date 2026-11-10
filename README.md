@@ -1,4 +1,4 @@
-# 🚀 Hub de Projetos Tech - SENAI
+# Hub de Projetos Tech — SENAI
 
 Bem-vindo ao repositório oficial do **Hub de Projetos** das turmas do curso técnico de **Informática para Internet** do SENAI. 
 
@@ -14,9 +14,9 @@ Durante a disciplina, os alunos foram desafiados a observar o ambiente escolar, 
 O resultado é este Hub: uma *Single Page Application* (SPA) com estética "Cyber/Tech" que reúne **13 sistemas e protótipos** voltados para a melhoria contínua da nossa unidade.
 
 ## 💻 Tecnologias Utilizadas no Hub
-* **HTML5:** 
-* **CSS3:** 
-* **JavaScript (Vanilla):**
+* **HTML5:** estrutura das páginas.
+* **CSS3:** estilos e layout.
+* **JavaScript (Vanilla):** interações da interface.
 
 ---
 
@@ -36,13 +36,19 @@ O resultado é este Hub: uma *Single Page Application* (SPA) com estética "Cybe
 9. **InfraTech:** App de check-in para classificação de gravidade e rastreio de manutenção predial.
 10. **SARP (Sistema de Alerta):** Monitoramento climático em tempo real para prevenção de acidentes na unidade.
 11. **InovaTech:** Catálogo digital inteligente com status instantâneo do acervo da biblioteca.
-12. **SGE (Gestão de Eventos):** Plataforma para prevenção de choque de horários na reserva de salas.
-13. **WaitGo:** Sistema em rede para controle de fluxo e liberação espaçada de turmas na catraca.
+## Executar localmente
 
----
+1. Clone ou baixe este repositório.
+2. Abra `index.html` no navegador, mantendo as pastas do projeto juntas.
+3. Use os links do Hub para explorar os projetos. Serviços e projetos externos podem exigir internet.
 
-## 🌐 Como Acessar
+## Estrutura
 
-### Visualizar Online (Recomendado)
-Acesse a página hospedada diretamente pelo GitHub Pages:
-👉 **[[https://romulogonzaga.github.io/hub-de-projetos/](https://romulogonzaga.github.io/hub_informatica/)]**
+- `index.html`: página inicial.
+- `style.css` e `script.js`: apresentação e interações.
+- `pages/`: páginas dos projetos.
+- `img/` e `presentation/`: imagens e materiais de apresentação.
+
+## Autoria e orientação
+
+As soluções apresentadas foram criadas pelos alunos. Rômulo Gonzaga atua como instrutor e orientador, conforme os créditos da iniciativa.
